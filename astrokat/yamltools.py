@@ -73,7 +73,7 @@ class ObsYAML(object):
         instruction_set += self.setup
         instruction_set += "{}:\n".format("observation_loop")
         instruction_set += "  - LST: {}\n".format(lst)
-        instruction_set += "  {}:\n".format("target_list")
+        instruction_set += "    {}:\n".format("target_list")
         for target in targets:
             instruction_set += "      - {}\n".format(target)
 

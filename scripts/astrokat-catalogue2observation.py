@@ -43,8 +43,7 @@ def cli():
                              "(default outputs to screen)")
     parser.add_argument("--json",
                         type=str,
-                        help="filename for observation JSON file "
-                             "(default outputs to screen)")
+                        help="filename for observation JSON file")
     parser.add_argument("--show",
                         action="store_true",
                         help="Show observation JSON instructions")
@@ -194,7 +193,7 @@ if __name__ == "__main__":
                         obs_plan.configuration)
         if args.show:
             jsontools.view(filename=args.json)
-    if args.show:
+    elif args.show:
         jsontools.view(json_dict=obs_plan.configuration)
 
     # unpack to create yaml structure
