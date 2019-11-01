@@ -9,10 +9,10 @@ from astrokat import (Observatory,
                       yamltools,
                       __version__)
 import argparse
-import sys
+import argcomplete
 
 
-def cli(prog):
+def cli():
     """Parse command line options.
 
     Returns
@@ -97,6 +97,7 @@ def cli(prog):
                        type=float,
                        default=60,  # sec
                        help="duration to track gain calibrator [sec]")
+    argcomplete.autocomplete(parser)
     return parser
 
 
@@ -157,7 +158,7 @@ class BuildObservation(object):
 
 
 if __name__ == "__main__":
-    parser = cli(sys.argv[0])
+    parser = cli()
     args = parser.parse_args()
 
     # read instrument requirements if provided
