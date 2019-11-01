@@ -39,11 +39,13 @@ class ObsYAML(object):
         # noise diode setup
         # 'noise_diode'
         # scan types
+
         # observation durations
         if durations:
             # 'desired_start_time', 'duration',
-            self.setup += self.yaml_block('durations',
-                                          instructions=durations)
+            if durations['obs_duration'] > 0:
+                self.setup += self.yaml_block('durations',
+                                              instructions=durations)
 
     def yaml_block(self,
                    name,

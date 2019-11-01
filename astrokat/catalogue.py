@@ -60,7 +60,7 @@ class Catalogue(object):
 
                 # keep header information
                 if line[0] == "#":
-                    self.header += line
+                    self.header += '{}\n'.format(line)
                     continue
 
                 # skip blank lines

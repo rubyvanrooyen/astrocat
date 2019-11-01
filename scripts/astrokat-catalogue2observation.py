@@ -194,6 +194,8 @@ if __name__ == "__main__":
                         obs_plan.configuration)
         if args.show:
             jsontools.view(filename=args.json)
+    if args.show:
+        jsontools.view(json_dict=obs_plan.configuration)
 
     # unpack to create yaml structure
     yaml_obj = yamltools.ObsYAML(instrument=obs_plan.instrument,
