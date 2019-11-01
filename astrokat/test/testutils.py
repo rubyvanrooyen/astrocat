@@ -3,7 +3,7 @@ import logging
 import os
 from six.moves import StringIO
 
-from astrokat import observe_main, simulate, utility
+from astrokat import observe_main, simulate, yamltools
 
 
 def yaml_path(file_path):
@@ -40,7 +40,7 @@ def extract_start_time(yaml_file):
         if it exists in yaml file
 
     """
-    yaml = utility.read_yaml(yaml_file)
+    yaml = yamltools.read(yaml_file)
     if yaml and yaml.get("durations") and yaml.get("durations").get("start_time"):
         return yaml["durations"]["start_time"]
 

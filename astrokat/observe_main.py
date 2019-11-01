@@ -8,10 +8,10 @@ import time
 
 import astrokat
 from astrokat.utility import datetime2timestamp, timestamp2datetime
+from astrokat.yamltools import read as read_yaml
 from astrokat import (
     NoTargetsUpError,
     NotAllTargetsUpError,
-    read_yaml,
     get_lst,
     katpoint_target,
     noisediode,
@@ -26,9 +26,15 @@ try:
         verify_and_connect,
     )
 except ImportError:
-    from astrokat import collect_targets, user_logger, start_session, verify_and_connect
+    from astrokat import (
+        collect_targets,
+        user_logger,
+        start_session,
+        verify_and_connect,
+    )
 
 
+    # move this to catalogue.py
 # TODO: target description defined in function needs to be in configuration
 def read_targets(target_items):
     """Read targets info.
@@ -79,16 +85,16 @@ def read_targets(target_items):
             # TODO: need to add "duration =" as well for user stupidity
             prefix = "duration="
             if item_.startswith(prefix):
-                duration = item_[len(prefix) :]
+                duration = item_[len(prefix):]
             prefix = "type="
             if item_.startswith(prefix):
-                obs_type = item_[len(prefix) :]
+                obs_type = item_[len(prefix):]
             prefix = "cadence="
             if item_.startswith(prefix):
-                cadence = item_[len(prefix) :]
+                cadence = item_[len(prefix):]
             prefix = "nd="
             if item_.startswith(prefix):
-                nd = item_[len(prefix) :]
+                nd = item_[len(prefix):]
         durations.append(duration)
         obs_types.append(obs_type)
         cadences.append(cadence)

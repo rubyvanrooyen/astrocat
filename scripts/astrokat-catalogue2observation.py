@@ -116,7 +116,7 @@ class BuildObservation(object):
                  instrument={}):
         self.configuration = cat_obj.json.observation
         self.targets = cat_obj.json.targets
-        self.target_list = cat_obj.target2string(self.targets)
+        self.target_list = catalogue.target2string(self.targets)
         self.instrument = instrument
         if instrument:
             cat_obj.json.add_instrument(instrument)

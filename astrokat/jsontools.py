@@ -18,6 +18,8 @@ template = """
     "calendar_event_url": "",
     "instrument": {},
     "noise_diode": {},
+    "scan": {},
+    "raster_scan": {},
     "horizon": 20,
     "lst_start": "0",
     "lst_start_end": null,
@@ -37,11 +39,12 @@ template = """
 }
 """
 
+# dump_rate, vs integration_period, vs integration_time
 instrument_structure = """
 {
     "enabled": false,
     "product": "",
-    "integration_period": "",
+    "integration_time": "",
     "band": "",
     "pool_resources": [
         "cbf",
@@ -50,12 +53,34 @@ instrument_structure = """
 }
 """
 
+# pattern vs antennas
+# on_fraction vs on_frac
 noise_diode_setup = """
 {
     "enabled": false,
-    "pattern": "all",
-    "on_fraction": null,
+    "antennas": "all",
+    "on_frac": null,
     "cycle_len": null
+}
+"""
+
+simple_scan = """
+{
+  "duration": null,
+  "start": [],
+  "end": [],
+  "projection": "plate-carree"
+}
+"""
+
+raster_scan_template = """
+{
+  "num_scans": null,
+  "scan_duration": null,
+  "scan_extent": null,
+  "scan_spacing": null,
+  "scan_in_azimuth": false,
+  "projection": "plate-carree"
 }
 """
 
@@ -83,18 +108,42 @@ class ObsJSON(object):
         self.observation = json.loads(template,
                                       object_pairs_hook=OrderedDict)
         self.instrument = {}
+        self.noise_diode = {}
+        self.scan = {}
+        self.raster_scan = {}
         self.targets = []
+
+    def __add_json_component__(self, component, body):
+        comp_ = json.loads(component,
+                           object_pairs_hook=OrderedDict)
+        for key, value in body.iteritems():
+            comp_[key] = value
+        return comp_
 
     def add_instrument(self,
                        instrument):
-        self.instrument = json.loads(instrument_structure,
-                                     object_pairs_hook=OrderedDict)
-        for key, value in instrument.iteritems():
-            # # !!this should not be dump_rate!!
-            # if key == 'integration_period':
-            #     key = 'dump_rate'
-            self.instrument[key] = value
+        self.instrument = self.__add_json_component__(instrument_structure,
+                                                      instrument)
+        # self.instrument = json.loads(instrument_structure,
+        #                              object_pairs_hook=OrderedDict)
+        # for key, value in instrument.iteritems():
+        #     # # !!this should not be dump_rate!!
+        #     # if key == 'integration_period':
+        #     #     key = 'dump_rate'
+        #     self.instrument[key] = value
 
+    def add_nd(self,
+               noise_diode):
+        self.noise_diode = self.__add_json_component__(noise_diode_setup,
+                                                       noise_diode)
+    def add_scan(self,
+                 scan):
+        self.scan = self.__add_json_component__(simple_scan,
+                                                       scan)
+    def add_raster_scan(self,
+                        raster_scan):
+        self.raster_scan = self.__add_json_component__(raster_scan_template,
+                                                       raster_scan)
     def add_target(self,
                    name,
                    x_coord,

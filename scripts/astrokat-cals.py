@@ -14,7 +14,8 @@ import numpy
 import os
 import sys
 
-from astrokat import Observatory, read_yaml, katpoint_target, __version__
+from astrokat import Observatory, katpoint_target, __version__
+from astrokat.yamltools import read as read_yaml
 from astrokat.utility import datetime2timestamp, timestamp2datetime
 from copy import deepcopy
 from datetime import datetime, timedelta

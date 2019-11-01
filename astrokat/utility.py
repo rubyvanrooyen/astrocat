@@ -3,7 +3,6 @@ import datetime
 import katpoint
 import numpy
 import time
-import yaml
 
 
 class NotAllTargetsUpError(Exception):
@@ -16,71 +15,6 @@ class NotAllTargetsUpError(Exception):
 
 class NoTargetsUpError(Exception):
     """No targets are above the horizon at the start of the observation."""
-
-
-def read_yaml(filename):
-    """Read config .yaml file."""
-    with open(filename, "r") as stream:
-        try:
-            data = yaml.safe_load(stream)
-        except yaml.parser.ParserError:
-            return {}
-
-    if not isinstance(data, dict):
-        # not a yaml file, suspected csv file, returning False
-        return {}
-
-    # remove empty keys
-    for key in list(data.keys()):
-        if data[key] is None:
-            del data[key]
-
-    # handle mapping of user friendly keys to CAM resource keys
-    if "instrument" in data.keys():
-        instrument = data["instrument"]
-        if instrument is not None:
-            if "integration_time" in instrument.keys():
-                integration_time = float(instrument["integration_time"])
-                instrument["dump_rate"] = 1.0 / integration_time
-                del instrument["integration_time"]
-
-    # verify required information in observation loop before continuing
-    if "durations" in data.keys():
-        if data["durations"] is None:
-            msg = "Durations primary key cannot be empty in YAML file"
-            raise RuntimeError(msg)
-        if "start_time" in data["durations"]:
-            start_time = data["durations"]["start_time"]
-            if isinstance(start_time, str):
-                data["durations"]["start_time"] = datetime.datetime.strptime(
-                    start_time, "%Y-%m-%d %H:%M"
-                )
-    if "observation_loop" not in data.keys():
-        raise RuntimeError("Nothing to observe, exiting")
-    if data["observation_loop"] is None:
-        raise RuntimeError("Empty observation loop, exiting")
-    for obs_loop in data["observation_loop"]:
-        if isinstance(obs_loop, str):
-            raise RuntimeError(
-                "Incomplete observation input: "
-                "LST range and at least one target required."
-            )
-        # TODO: correct implementation for single vs multiple observation loops
-        # -> if len(obs_loop) > 0:
-        if "LST" not in obs_loop.keys():
-            raise RuntimeError("Observation LST not provided, exiting")
-        if "target_list" not in obs_loop.keys():
-            raise RuntimeError("Empty target list, exiting")
-
-    if "scan" in data.keys():
-        if "start" in data["scan"].keys():
-            scan_start = data["scan"]["start"].split(",")
-            data["scan"]["start"] = numpy.array(scan_start, dtype=float)
-        if "end" in data["scan"].keys():
-            scan_end = data["scan"]["end"].split(",")
-            data["scan"]["end"] = numpy.array(scan_end, dtype=float)
-
-    return data
 
 
 def datetime2timestamp(datetime_obj):
@@ -112,21 +46,21 @@ def katpoint_target(target_item):
     for item_ in target_:
         prefix = "name="
         if item_.startswith(prefix):
-            name = item_[len(prefix) :]
+            name = item_[len(prefix):]
         prefix = "tags="
         if item_.startswith(prefix):
-            tags = item_[len(prefix) :]
+            tags = item_[len(prefix):]
         prefix = "model="
         if item_.startswith(prefix):
-            fluxmodel = item_[len(prefix) :]
+            fluxmodel = item_[len(prefix):]
         else:
             fluxmodel = ()
         for coord in coords:
             prefix = coord + "="
             if item_.startswith(prefix):
                 ctag = coord
-                x = item_[len(prefix) :].split()[0].strip()
-                y = item_[len(prefix) :].split()[1].strip()
+                x = item_[len(prefix):].split()[0].strip()
+                y = item_[len(prefix):].split()[1].strip()
                 break
     target = "{}, {} {}, {}, {}, {}".format(name, ctag, tags, x, y, fluxmodel)
     return name, target
@@ -220,11 +154,11 @@ def lst2utc(req_lst, ref_location, date=None):
     [time_range, lst_range] = get_lst_range(date)
     lst_idx = numpy.abs(lst_range - req_lst).argmin()
     if lst_range[lst_idx] < req_lst:
-        x = lst_range[lst_idx : lst_idx + 2]
-        y = time_range[lst_idx : lst_idx + 2]
+        x = lst_range[lst_idx:lst_idx + 2]
+        y = time_range[lst_idx:lst_idx + 2]
     else:
-        x = lst_range[lst_idx - 1 : lst_idx + 1]
-        y = time_range[lst_idx - 1 : lst_idx + 1]
+        x = lst_range[lst_idx - 1:lst_idx + 1]
+        y = time_range[lst_idx - 1:lst_idx + 1]
     linefit = numpy.poly1d(numpy.polyfit(x, y, 1))
     return datetime.datetime.utcfromtimestamp(linefit(req_lst))
 

@@ -106,37 +106,40 @@ class Catalogue(object):
                                      flux_model=flux_model,
                                      cadence=cadence)
 
-    def target2string(self, target_list):
-        """Create yaml target list
 
-        Parameters
-        ----------
-            target_list: list
-                A list of json targets
+def target2string(target_list):
+    """Create yaml target list
 
-        Returns
-        --------
-            targets: list
-                A list of targets with the format
-                'name=<name>, <coord_type>=<x_coord>,<y_coord>, tags=<tags>, duration=<sec>'
+    Parameters
+    ----------
+        target_list: list
+            A list of json targets
 
-        """
-        targets = []
-        for target in target_list:
-            target_items = [target['name'],
-                            target['coord_type'],
-                            " ".join([target['x'], target['y']]),
-                            target['tags'],
-                            target['duration']]
-            target_spec = "name={}, {}={}, tags={}, duration={}"
-            if target['cadence']:
-                target_spec += ", cadence={}"
-                target_items.append(target['cadence'])
-            if target['flux_model']:
-                target_spec += ", model={}"
-                target_items.append(target['flux_model'])
-            target = target_spec.format(*target_items)
-            targets.append(target)
-        return targets
+    Returns
+    --------
+        targets: list
+            A list of targets with the format
+            'name=<name>, <coord_type>=<x_coord>,<y_coord>, tags=<tags>, duration=<sec>'
+
+    """
+    targets = []
+    for target in target_list:
+        target_items = [target['name'],
+                        target['coord_type'],
+                        " ".join([target['x'], target['y']]),
+                        target['tags'],
+                        target['duration']]
+        target_spec = "name={}, {}={}, tags={}, duration={}"
+        if target['cadence']:
+            target_spec += ", cadence={}"
+            target_items.append(target['cadence'])
+        if target['flux_model']:
+            target_spec += ", model={}"
+            target_items.append(target['flux_model'])
+        target = target_spec.format(*target_items)
+        targets.append(target)
+    return targets
+
+# def string2target -- from observe_main, but better
 
 # -fin-
