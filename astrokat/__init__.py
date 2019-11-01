@@ -4,9 +4,12 @@ from __future__ import absolute_import
 
 from .__main__ import cli
 
-from . import noisediode
+from . import catalogue
 from . import correlator
+from . import jsontools
+from . import noisediode
 from . import scans
+from . import yamltools
 
 from .simulate import user_logger, verify_and_connect, start_session
 from .utility import (
