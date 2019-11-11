@@ -15,7 +15,7 @@ setup(
     packages=find_packages(),
     scripts=[
         "scripts/astrokat-cals.py",
-        "scripts/astrokat-catalogue2obsfile.py",
+        "scripts/astrokat-catalogue2observation.py",
         "scripts/astrokat-fitflux.py",
         "scripts/astrokat-lst.py",
         "scripts/astrokat-observe.py",

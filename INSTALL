@@ -2,5 +2,5 @@ The following python packages are assumed
   numpy
   matplotlib
 The following python packages are required by the framework
-pip install pyyaml, pyephem, future, katpoint
+pip install pyyaml, pyephem, future, katpoint, json, argcomplete
 
